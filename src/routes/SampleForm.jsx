@@ -7,12 +7,28 @@ import {
   Stack,
   Typography,
   MenuItem,
+  IconButton,
+  Grid,
 } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { schema } from './validationSchema';
 import { useNavigate, useLocation } from "react-router-dom";
 import './form.css';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { styled } from '@mui/material/styles';
+import Paper from '@mui/material/Paper';
+
+const Item = styled(Paper)(({ theme }) => ({
+  // backgroundColor: '#fff',
+  // ...theme.typography.body2,
+  // padding: theme.spacing(1),
+  textAlign: 'center',
+  // color: (theme.vars ?? theme).palette.text.secondary,
+  // ...theme.applyStyles('dark', {
+  //   backgroundColor: '#1A2027',
+  // }),
+}));
 
 export default function SampleForm() {
   const navigate = useNavigate();
@@ -123,6 +139,21 @@ export default function SampleForm() {
       alert('查詢失敗');
     }
   };
+
+  const items = [
+    {
+      number: 1,
+      code: 'ID001',
+      name: '範例名',
+      url: 'google.com',
+    },
+    {
+      number: 2,
+      code: 'ID002',
+      name: '第二筆',
+      url: 'example.com',
+    },
+  ];
 
   return (
     <Box sx={{ maxWidth: 480, mx: 'auto', margin: "10px" }}>
@@ -246,6 +277,25 @@ export default function SampleForm() {
             InputLabelProps={{ shrink: true }}
             {...register('city')}
           />
+
+          <Box sx={{ width: '100%' }}>
+            {items.map((item) => (
+              <Grid container spacing={2}>
+                <Grid size={8}>
+                  <div style={{textAlign: 'center', background: 'gray'}}>size=8</div>
+                </Grid>
+                <Grid size={4}>
+                  <div style={{textAlign: 'center', background: 'gray'}}>size=4</div>
+                </Grid>
+                <Grid size={4}>
+                  <div style={{textAlign: 'center', background: 'gray'}}>size=4</div>
+                </Grid>
+                <Grid size={8}>
+                  <div style={{textAlign: 'center', background: 'gray'}}>size=8</div>
+                </Grid>
+              </Grid>
+            ))}
+          </Box>
 
           <Button type="submit" variant="contained">
             送出

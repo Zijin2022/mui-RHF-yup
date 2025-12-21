@@ -6,3 +6,42 @@
 .disabled-field .MuiInputBase-input.Mui-disabled {
   -webkit-text-fill-color: #444;
 }
+
+.item-box {
+  border: 2px solid #000;
+  margin-bottom: 16px;
+}
+
+.item-grid {
+  display: grid;
+  grid-template-columns: 60px 1fr 80px;
+  color: #000;
+}
+
+/* 左右欄（number / del-btn） */
+.side-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+/* 中間欄 */
+.center-cell {
+  padding: 8px 12px;
+}
+
+/* 中間的橫線 */
+.divider {
+  border-top: 2px solid #000;
+  margin: 4px 0;
+}
+
+/* 刪除按鈕樣式 */
+.del-btn {
+  border: 1px solid #000;
+  background: transparent;
+  color: #000;
+  cursor: pointer;
+  padding: 4px 8px;
+}
