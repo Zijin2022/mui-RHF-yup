@@ -14,7 +14,15 @@ export default function Table() {
       <button onClick={goToProfile}>
         Go to Profile
       </button>
-      <button onClick={() => navigate("/form")}>
+      <button onClick={() => navigate("/form", {
+        state: {
+          name: '田中太郎',
+          email: 'tanaka@example.com',
+          age: 30,
+          gender: 'male',
+          zipcode: '1640001',
+        },
+      })}>
         Go to form
       </button>
     </div>

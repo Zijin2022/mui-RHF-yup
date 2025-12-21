@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useEffect  } from 'react';
 import {
   TextField,
   Button,
@@ -8,42 +8,59 @@ import {
   Typography,
   MenuItem,
 } from '@mui/material';
-import { useForm, useFormState } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { schema } from './validationSchema';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import './form.css';
 
 export default function SampleForm() {
   const navigate = useNavigate();
+  const { state } = useLocation();
+  const FIELD_ORDER = [
+    'name',
+    'email',
+    'age',
+    'gender',
+    'zipcode',
+  ];
+
+  const getDefaultValue = () => {
+    return Object.fromEntries(
+      FIELD_ORDER.map((key) => [key, state?.[key] ?? ''])
+    )
+  }
+
+  const defaultValues = getDefaultValue();
+
+  console.log('defaultValues', defaultValues);
+
   const {
     register,
     handleSubmit,
     trigger,
     formState: { errors },
-    // control,
+    control,
     setValue,
     getValues,
+    reset,
   } = useForm({
     resolver: yupResolver(schema),
     mode: 'onBlur', // onChange
     // reValidateMode: 'onChange', // onBlur
     // shouldUnregister: false, 
-    // defaultValues: {
-    //   name: '',
-    //   email: '',
-    //   age: '',
-    //   gender: '',
-    // },
+    defaultValues
   });
 
-  // const { errors } = useFormState({ control });
 
-  const FIELD_ORDER = [
-    'name',
-    'email',
-    'age',
-  ];
+  /* 🔥 關鍵：state 來了就 reset */
+  useEffect(() => {
+    if (state) {
+      reset(getDefaultValue());
+    }
+  }, [state, reset]);
+
+  // const { errors } = useFormState({ control });
 
   const errorDeps = FIELD_ORDER.map(
     field => errors[field]?.message
@@ -166,7 +183,25 @@ export default function SampleForm() {
             {...register('age', { valueAsNumber: true })}
           />
 
-          <TextField
+          <Controller
+            name="gender"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                select
+                label="性別"
+                {...field}
+                error={!!errors.gender}
+                helperText={errors.gender?.message}
+              >
+                <MenuItem value="">請選擇</MenuItem>
+                <MenuItem value="male">男</MenuItem>
+                <MenuItem value="female">女</MenuItem>
+              </TextField>
+            )}
+          />
+
+          {/* <TextField
             select
             label="性別"
             error={!!errors.gender}
@@ -181,7 +216,7 @@ export default function SampleForm() {
             <MenuItem value="">請選擇</MenuItem>
             <MenuItem value="male">男</MenuItem>
             <MenuItem value="female">女</MenuItem>
-          </TextField>
+          </TextField> */}
 
           <Stack direction="row" spacing={1}>
             <TextField
