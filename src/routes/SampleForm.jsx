@@ -18,8 +18,11 @@ export default function SampleForm() {
   const {
     register,
     handleSubmit,
+    trigger,
     formState: { errors },
-    // control
+    // control,
+    setValue,
+    getValues,
   } = useForm({
     resolver: yupResolver(schema),
     mode: 'onBlur', // onChange
@@ -67,6 +70,40 @@ export default function SampleForm() {
 
   const onSubmit = data => {
     console.log('submit success:', data);
+  };
+
+  const handleZipcodeSearch = async () => {
+    // 🔒 先驗證 zipcode 欄位
+    const isValid = await trigger('zipcode');
+    if (!isValid) return;
+
+    const zipcode = getValues('zipcode');
+
+    try {
+      const res = await fetch(
+        `https://zipcloud.ibsnet.co.jp/api/search?zipcode=${zipcode}`
+      );
+      const data = await res.json();
+
+      if (!data.results || data.results.length === 0) {
+        alert('查無地址');
+        setValue('prefecture', "");
+        setValue('city', "");
+        return;
+      }
+
+      const result = data.results[0];
+
+      // 🔥 填入 RHF（trigger re-render / errorDeps）
+      setValue('prefecture', result.address1, {
+        shouldDirty: true,
+      });
+      setValue('city', result.address2 + result.address3, {
+        shouldDirty: true,
+      });
+    } catch (e) {
+      alert('查詢失敗');
+    }
   };
 
   return (
@@ -144,6 +181,43 @@ export default function SampleForm() {
             <MenuItem value="male">男</MenuItem>
             <MenuItem value="female">女</MenuItem>
           </TextField>
+
+          <Stack direction="row" spacing={1}>
+            <TextField
+              label="郵便番号（7桁）"
+              error={!!errors.zipcode}
+              helperText={errors.zipcode?.message}
+              inputProps={{ maxLength: 7 }}
+              {...register('zipcode')}
+            />
+            <Button variant="contained" onClick={handleZipcodeSearch}>
+              查詢
+            </Button>
+          </Stack>
+
+          <TextField
+            label="都道府県"
+            disabled
+            InputLabelProps={{ shrink: true }}
+            sx={{
+              '& .MuiInputBase-root.Mui-disabled': {
+                backgroundColor: '#f5f5f5',
+              },
+            }}
+            {...register('prefecture')}
+          />
+
+          <TextField
+            label="市区町村"
+            disabled
+            InputLabelProps={{ shrink: true }}
+            sx={{
+              '& .MuiInputBase-root.Mui-disabled': {
+                backgroundColor: '#f5f5f5',
+              },
+            }}
+            {...register('city')}
+          />
 
           <Button type="submit" variant="contained">
             送出
