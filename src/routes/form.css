@@ -1,0 +1,8 @@
+/* 只對有 .disabled-field 的 TextField 生效 */
+.disabled-field .MuiInputBase-root.Mui-disabled {
+  background-color: #f0f0f0;
+}
+
+.disabled-field .MuiInputBase-input.Mui-disabled {
+  -webkit-text-fill-color: #444;
+}

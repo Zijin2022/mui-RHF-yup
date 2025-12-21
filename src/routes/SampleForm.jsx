@@ -12,6 +12,7 @@ import { useForm, useFormState } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { schema } from './validationSchema';
 import { useNavigate } from "react-router-dom";
+import './form.css';
 
 export default function SampleForm() {
   const navigate = useNavigate();
@@ -198,24 +199,16 @@ export default function SampleForm() {
           <TextField
             label="都道府県"
             disabled
+            className="disabled-field"
             InputLabelProps={{ shrink: true }}
-            sx={{
-              '& .MuiInputBase-root.Mui-disabled': {
-                backgroundColor: '#f5f5f5',
-              },
-            }}
             {...register('prefecture')}
           />
 
           <TextField
             label="市区町村"
             disabled
+            className="disabled-field"
             InputLabelProps={{ shrink: true }}
-            sx={{
-              '& .MuiInputBase-root.Mui-disabled': {
-                backgroundColor: '#f5f5f5',
-              },
-            }}
             {...register('city')}
           />
 
