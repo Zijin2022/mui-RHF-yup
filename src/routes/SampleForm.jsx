@@ -10,7 +10,7 @@ import {
   IconButton,
   Grid,
 } from '@mui/material';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { schema } from './validationSchema';
 import { useNavigate, useLocation } from "react-router-dom";
@@ -65,8 +65,46 @@ export default function SampleForm() {
     mode: 'onBlur', // onChange
     // reValidateMode: 'onChange', // onBlur
     // shouldUnregister: false, 
-    defaultValues
+    defaultValues: {
+      ...defaultValues,
+      itemsA: [],
+      itemsB: [],
+    }
   });
+
+  const {
+    fields: fieldsA,
+    append: appendA,
+    remove: removeA,
+  } = useFieldArray({
+    control,
+    name: 'itemsA',
+  });
+
+  const {
+    fields: fieldsB,
+    append: appendB,
+    remove: removeB,
+  } = useFieldArray({
+    control,
+    name: 'itemsB',
+  });
+
+  const addItemA = () => {
+    appendA({
+      id: Date.now(),
+      code: '1',
+      url: '2',
+    });
+  };
+
+  const addItemB = () => {
+    appendB({
+      id: Date.now(),
+      name: '3',
+      value: '4',
+    });
+  };
 
 
   /* 🔥 關鍵：state 來了就 reset */
@@ -278,24 +316,58 @@ export default function SampleForm() {
             {...register('city')}
           />
 
-          <Box sx={{ width: '100%' }}>
-            {items.map((item) => (
-              <Grid container spacing={2}>
-                <Grid size={8}>
-                  <div style={{textAlign: 'center', background: 'gray'}}>size=8</div>
-                </Grid>
-                <Grid size={4}>
-                  <div style={{textAlign: 'center', background: 'gray'}}>size=4</div>
-                </Grid>
-                <Grid size={4}>
-                  <div style={{textAlign: 'center', background: 'gray'}}>size=4</div>
-                </Grid>
-                <Grid size={8}>
-                  <div style={{textAlign: 'center', background: 'gray'}}>size=8</div>
-                </Grid>
-              </Grid>
+          <Stack spacing={1}>
+            <Button onClick={addItemA} variant="contained">
+              新增 A
+            </Button>
+            {fieldsA.map((field, index) => (
+              <Stack key={field.id} direction="row" spacing={1}>
+                <Stack key={field.id} direction="column" spacing={1}>
+                  <TextField
+                    label="Code"
+                    {...register(`itemsA.${index}.code`)}
+                  />
+                  <TextField
+                    label="URL"
+                    {...register(`itemsA.${index}.url`)}
+                  />
+                </Stack>
+                <Button
+                  color="error"
+                  onClick={() => removeA(index)}
+                >
+                  刪除
+                </Button>
+              </Stack>
             ))}
-          </Box>
+          </Stack>
+
+          <Stack spacing={1}>
+            <Button onClick={addItemB} variant="contained">
+              新增 B
+            </Button>
+
+            {fieldsB.map((field, index) => (
+              <Stack key={field.id} direction="row" spacing={1}>
+                <Stack key={field.id} direction="column" spacing={1}>
+                  <TextField
+                    label="Name"
+                    {...register(`itemsB.${index}.name`)}
+                  />
+                  <TextField
+                    label="Value"
+                    {...register(`itemsB.${index}.value`)}
+                  />
+                </Stack>
+                <Button
+                  color="error"
+                  onClick={() => removeB(index)}
+                >
+                  刪除
+                </Button>
+              </Stack>
+            ))}
+          </Stack>
 
           <Button type="submit" variant="contained">
             送出
