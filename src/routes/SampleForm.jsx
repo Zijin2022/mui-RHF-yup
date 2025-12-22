@@ -16,19 +16,7 @@ import { schema } from './validationSchema';
 import { useNavigate, useLocation } from "react-router-dom";
 import './form.css';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { styled } from '@mui/material/styles';
-import Paper from '@mui/material/Paper';
 
-const Item = styled(Paper)(({ theme }) => ({
-  // backgroundColor: '#fff',
-  // ...theme.typography.body2,
-  // padding: theme.spacing(1),
-  textAlign: 'center',
-  // color: (theme.vars ?? theme).palette.text.secondary,
-  // ...theme.applyStyles('dark', {
-  //   backgroundColor: '#1A2027',
-  // }),
-}));
 
 export default function SampleForm() {
   const navigate = useNavigate();
@@ -178,20 +166,17 @@ export default function SampleForm() {
     }
   };
 
-  const items = [
-    {
-      number: 1,
-      code: 'ID001',
-      name: '範例名',
-      url: 'google.com',
-    },
-    {
-      number: 2,
-      code: 'ID002',
-      name: '第二筆',
-      url: 'example.com',
-    },
-  ];
+  const formatDateTime = (date) => {
+    const pad = (n) => String(n).padStart(2, '0');
+
+    const yyyy = date.getFullYear();
+    const MM = pad(date.getMonth() + 1);
+    const dd = pad(date.getDate());
+    const HH = pad(date.getHours());
+    const mm = pad(date.getMinutes());
+
+    return `${yyyy}-${MM}-${dd} ${HH}:${mm}`;
+  }
 
   return (
     <Box sx={{ maxWidth: 480, mx: 'auto', margin: "10px" }}>
@@ -368,6 +353,14 @@ export default function SampleForm() {
               </Stack>
             ))}
           </Stack>
+
+          <TextField
+            type="datetime-local"
+            label="Start Time"
+            {...register('applDate')}
+            defaultValue={formatDateTime(new Date())}
+            InputLabelProps={{ shrink: true }}
+          />
 
           <Button type="submit" variant="contained">
             送出
