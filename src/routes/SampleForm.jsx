@@ -7,6 +7,7 @@ import {
   Stack,
   Typography,
   MenuItem,
+  Divider,
   IconButton,
   Grid,
 } from '@mui/material';
@@ -306,26 +307,30 @@ export default function SampleForm() {
               新增 A
             </Button>
             {fieldsA.map((field, index) => (
-              <Stack key={field.id} direction="row" spacing={1}>
-                <Stack key={field.id} direction="column" spacing={1}>
-                  <TextField
-                    label="Code"
-                    {...register(`itemsA.${index}.code`)}
-                  />
-                  <TextField
-                    label="URL"
-                    {...register(`itemsA.${index}.url`)}
-                  />
+              <>
+                <Stack key={field.id} direction="row" spacing={1}>
+                  <Stack key={field.id} direction="column" spacing={1}>
+                    <TextField
+                      label="Code"
+                      {...register(`itemsA.${index}.code`)}
+                    />
+                    <TextField
+                      label="URL"
+                      {...register(`itemsA.${index}.url`)}
+                    />
+                  </Stack>
+                  <Button
+                    color="error"
+                    onClick={() => removeA(index)}
+                  >
+                    刪除
+                  </Button>
                 </Stack>
-                <Button
-                  color="error"
-                  onClick={() => removeA(index)}
-                >
-                  刪除
-                </Button>
-              </Stack>
+                <Divider sx={{borderColor: 'black', borderWidth: 'initial'}} />
+              </>
             ))}
           </Stack>
+
 
           <Stack spacing={1}>
             <Button onClick={addItemB} variant="contained">
