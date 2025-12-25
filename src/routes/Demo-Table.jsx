@@ -25,6 +25,9 @@ export default function Table() {
       })}>
         Go to form
       </button>
+      <button onClick={() => navigate("/upload")}>
+        Go to uplaod
+      </button>
     </div>
   );
 }
